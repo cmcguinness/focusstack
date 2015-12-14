@@ -12,7 +12,7 @@ pixel is taken from the image with the sharpest focus at that location.
 
 The logic is roughly the following:
 
-1.  Scale and align the images.  Changing the focus on a lens, even
+1.  Align the images.  Changing the focus on a lens, even
     if the camera remains fixed, causes a mild zooming on the images.
     We need to correct the images so they line up perfectly on top
     of each other.
