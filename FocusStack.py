@@ -56,7 +56,10 @@ def findHomography(image_1_kp, image_2_kp, matches):
 #
 #
 def align_images(images):
-    use_sift = False
+
+    #   SIFT generally produces better results, but it is not FOSS, so chose the feature detector
+    #   that suits the needs of your project.  ORB does OK
+    use_sift = True
 
     outimages = []
 
@@ -96,16 +99,25 @@ def align_images(images):
         newimage = cv2.warpPerspective(images[i], hom, (images[i].shape[1], images[i].shape[0]), flags=cv2.INTER_LINEAR)
 
         outimages.append(newimage)
+        # If you find that there's a large amount of ghosting, it may be because one or more of the input
+        # images gets misaligned.  Outputting the aligned images may help diagnose that.
+        # cv2.imwrite("aligned{}.png".format(i), newimage)
 
 
 
     return outimages
 
 #
-#   Do a lapacian or other filter
+#   Compute the gradient map of the image
 def doLap(image):
-    kernel_size = 9         # YOU SHOULD TUNE THIS VALUE TO SUIT YOUR NEEDS
-    blurred = cv2.GaussianBlur(image, (kernel_size,kernel_size), 0)
+
+    # YOU SHOULD TUNE THESE VALUES TO SUIT YOUR NEEDS
+    kernel_size = 5         # Size of the laplacian window
+    blur_size = 5           # How big of a kernal to use for the gaussian blur
+                            # Generally, keeping these two values the same or very close works well
+                            # Also, odd numbers, please...
+
+    blurred = cv2.GaussianBlur(image, (blur_size,blur_size), 0)
     return cv2.Laplacian(blurred, cv2.CV_64F, ksize=kernel_size)
 
 #
